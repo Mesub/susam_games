@@ -1,0 +1,272 @@
+/* ==========================================================================
+   Susam's Arcade — shared theme
+   A neon / retro-modern aesthetic shared across the hub and every game.
+   ========================================================================== */
+
+:root {
+  --bg: #0b0e1a;
+  --bg-soft: #121732;
+  --panel: rgba(22, 28, 56, 0.72);
+  --panel-solid: #161c38;
+  --border: rgba(120, 140, 255, 0.18);
+  --ink: #e8ecff;
+  --ink-dim: #97a0d0;
+  --ink-faint: #5a6296;
+
+  --neon: #4cc9f0;
+  --neon-2: #b15cff;
+  --neon-3: #ff5c8a;
+  --gold: #ffd166;
+  --good: #4ade80;
+
+  --radius: 16px;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  --font: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  --mono: "SFMono-Regular", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 700px at 20% -10%, rgba(76, 201, 240, 0.12), transparent 60%),
+    radial-gradient(1000px 600px at 100% 10%, rgba(177, 92, 255, 0.12), transparent 55%),
+    radial-gradient(900px 700px at 50% 120%, rgba(255, 92, 138, 0.10), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--neon); text-decoration: none; }
+a:hover { color: var(--ink); }
+
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+
+/* ---- Brand / header --------------------------------------------------- */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+.brand .logo {
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  font-size: 26px;
+  background: linear-gradient(135deg, var(--neon), var(--neon-2));
+  box-shadow: 0 6px 24px rgba(76, 201, 240, 0.35);
+}
+.brand h1 {
+  font-size: clamp(24px, 4vw, 38px);
+  margin: 0;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, var(--neon), var(--neon-2) 55%, var(--neon-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.tagline {
+  color: var(--ink-dim);
+  margin: 2px 0 30px 60px;
+  font-size: 15px;
+}
+
+/* ---- Buttons / pills -------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.08s ease, border-color 0.2s ease, background 0.2s ease;
+  -webkit-user-select: none; user-select: none;
+}
+.btn:hover { border-color: rgba(120, 140, 255, 0.5); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn.primary {
+  border: none;
+  background: linear-gradient(135deg, var(--neon), var(--neon-2));
+  color: #06122a;
+}
+.btn.ghost { background: transparent; }
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-dim);
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.back:hover { color: var(--ink); }
+
+/* ---- Game grid (hub) -------------------------------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+.card {
+  position: relative;
+  display: block;
+  padding: 22px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  overflow: hidden;
+  transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  min-height: 168px;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(120, 140, 255, 0.55);
+  box-shadow: var(--shadow);
+}
+.card .emoji { font-size: 40px; line-height: 1; }
+.card h3 { margin: 14px 0 4px; font-size: 20px; color: var(--ink); }
+.card p { margin: 0; color: var(--ink-dim); font-size: 14px; }
+.card .glow {
+  position: absolute;
+  inset: auto -40% -60% -40%;
+  height: 160px;
+  background: radial-gradient(closest-side, rgba(76, 201, 240, 0.25), transparent);
+  filter: blur(10px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.card:nth-child(3n+2) .glow { background: radial-gradient(closest-side, rgba(177, 92, 255, 0.25), transparent); }
+.card:nth-child(3n)   .glow { background: radial-gradient(closest-side, rgba(255, 92, 138, 0.25), transparent); }
+
+/* ---- Game shell (per-game pages) ------------------------------------- */
+.game-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.game-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 560px;
+  gap: 14px;
+}
+.game-head h2 {
+  margin: 0;
+  font-size: 24px;
+  background: linear-gradient(90deg, var(--neon), var(--neon-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.scoreboard {
+  display: flex;
+  gap: 12px;
+}
+.stat {
+  min-width: 84px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.stat .label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-faint); }
+.stat .value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.stage {
+  position: relative;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  touch-action: none;
+}
+canvas { display: block; }
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  background: rgba(11, 14, 26, 0.82);
+  backdrop-filter: blur(3px);
+  padding: 24px;
+  transition: opacity 0.2s ease;
+}
+.overlay.hidden { opacity: 0; pointer-events: none; }
+.overlay h3 { margin: 0; font-size: 30px; }
+.overlay p { margin: 0; color: var(--ink-dim); max-width: 320px; }
+
+.controls-hint {
+  color: var(--ink-faint);
+  font-size: 13px;
+  text-align: center;
+  max-width: 560px;
+}
+.controls-hint kbd {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel-solid);
+  color: var(--ink);
+}
+
+/* On-screen dpad for touch devices */
+.dpad {
+  display: none;
+  grid-template-columns: repeat(3, 60px);
+  grid-template-rows: repeat(2, 60px);
+  gap: 8px;
+  justify-content: center;
+}
+.dpad button {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 22px;
+  cursor: pointer;
+}
+.dpad button:active { background: var(--panel-solid); }
+.dpad .up   { grid-column: 2; grid-row: 1; }
+.dpad .left { grid-column: 1; grid-row: 2; }
+.dpad .down { grid-column: 2; grid-row: 2; }
+.dpad .right{ grid-column: 3; grid-row: 2; }
+
+@media (hover: none) and (pointer: coarse) {
+  .dpad { display: grid; }
+}
+
+footer.site {
+  margin-top: 48px;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
