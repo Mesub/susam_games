@@ -18,6 +18,20 @@ const JUMP_V = 12.5;
 const BASE_SPEED = 22;
 const MAX_SPEED = 52;
 const BEST_KEY = "forestRun3D.best";
+const COINS_KEY = "forestRun3D.coins";
+const OWNED_KEY = "forestRun3D.owned";
+const SKIN_KEY = "forestRun3D.skin";
+
+// Purchasable runner looks. `skinColor` recolours head + arms.
+const SKINS = [
+  { id: "classic", name: "Classic", price: 0,   shirt: 0xff6b4a, pants: 0x3a5bd6, skinColor: 0xffcf8a },
+  { id: "ranger",  name: "Ranger",  price: 40,  shirt: 0x3f7d3a, pants: 0x2f4a2a, skinColor: 0xe8b98a },
+  { id: "berry",   name: "Berry",   price: 80,  shirt: 0xb15cff, pants: 0x5a2a8a, skinColor: 0xffcf8a },
+  { id: "frost",   name: "Frost",   price: 140, shirt: 0x4cc9f0, pants: 0x1c5a8a, skinColor: 0xdff4ff },
+  { id: "shadow",  name: "Shadow",  price: 220, shirt: 0x272b3a, pants: 0x11131c, skinColor: 0x9aa0b8 },
+  { id: "golden",  name: "Golden",  price: 400, shirt: 0xffd166, pants: 0xc99a2e, skinColor: 0xffe6b0 },
+];
+const hex = (n) => "#" + n.toString(16).padStart(6, "0");
 
 // ---- DOM ----------------------------------------------------------------
 const stage = document.getElementById("stage");
@@ -27,9 +41,19 @@ const ovText = document.getElementById("ov-text");
 const startBtn = document.getElementById("start-btn");
 const scoreEl = document.getElementById("score");
 const bestEl = document.getElementById("best");
+const coinsEl = document.getElementById("coins");
 
 let best = parseInt(localStorage.getItem(BEST_KEY) || "0", 10);
 bestEl.textContent = best;
+
+// Persistent coin balance + inventory.
+let coinBalance = parseInt(localStorage.getItem(COINS_KEY) || "0", 10);
+let owned;
+try { owned = JSON.parse(localStorage.getItem(OWNED_KEY)) || ["classic"]; }
+catch (e) { owned = ["classic"]; }
+if (!owned.includes("classic")) owned.push("classic");
+let equippedSkin = localStorage.getItem(SKIN_KEY) || "classic";
+coinsEl.textContent = coinBalance;
 
 // ---- Renderer / scene / camera ------------------------------------------
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -168,6 +192,7 @@ function spawnObstacle(z) {
   mesh.userData = { kind, lane };
   scene.add(mesh);
   obstacles.push(mesh);
+  return lane;
 }
 
 // ---- Player character ----------------------------------------------------
@@ -193,6 +218,49 @@ player.add(armL, armR);
 
 player.position.set(0, 0, PLAYER_Z);
 scene.add(player);
+
+// Recolour the runner to a given skin id (mutates the shared materials).
+function applySkin(id) {
+  const s = SKINS.find((x) => x.id === id) || SKINS[0];
+  shirt.color.setHex(s.shirt);
+  pants.color.setHex(s.pants);
+  skin.color.setHex(s.skinColor);
+  equippedSkin = s.id;
+  localStorage.setItem(SKIN_KEY, s.id);
+}
+applySkin(equippedSkin);
+
+// ---- Collectible coins ---------------------------------------------------
+const geoCoin = new THREE.CylinderGeometry(0.32, 0.32, 0.07, 18);
+const matCoin = new THREE.MeshStandardMaterial({
+  color: 0xffd24a, metalness: 0.6, roughness: 0.32,
+  emissive: 0x5a3d00, emissiveIntensity: 0.35,
+});
+const coinItems = [];
+
+function spawnCoinLine(avoidLane) {
+  let lane = (Math.random() * 3) | 0;
+  if (lane === avoidLane) lane = (lane + 1) % 3;
+  const n = 3 + ((Math.random() * 4) | 0);
+  for (let i = 0; i < n; i++) {
+    const g = new THREE.Group();
+    const disc = new THREE.Mesh(geoCoin, matCoin);
+    disc.rotation.x = Math.PI / 2;   // lay the disc to face the camera
+    disc.castShadow = true;
+    g.add(disc);
+    g.position.set(LANES[lane], 1.1, FAR_Z - i * 2.3);
+    g.userData = { lane };
+    scene.add(g);
+    coinItems.push(g);
+  }
+}
+
+function collectCoin(c) {
+  scene.remove(c);
+  coinBalance += 1;
+  localStorage.setItem(COINS_KEY, String(coinBalance));
+  coinsEl.textContent = coinBalance;
+}
 
 // A soft round shadow blob under the player (reads well even mid-air).
 const blob = new THREE.Mesh(
@@ -226,9 +294,11 @@ function resetGame() {
   nextSpawnZ = FAR_Z;
   scoreEl.textContent = "0";
 
-  // clear obstacles
+  // clear obstacles + coins
   for (const o of obstacles) scene.remove(o);
   obstacles.length = 0;
+  for (const c of coinItems) scene.remove(c);
+  coinItems.length = 0;
 
   // reset ground tiles
   for (let i = 0; i < groundTiles.length; i++) {
@@ -274,6 +344,7 @@ function jump() {
 }
 
 window.addEventListener("keydown", (e) => {
+  if (shopOpen()) { if (e.code === "Escape") closeShop(); return; }
   switch (e.code) {
     case "ArrowLeft": case "KeyA": moveLane(-1); e.preventDefault(); break;
     case "ArrowRight": case "KeyD": moveLane(1); e.preventDefault(); break;
@@ -286,6 +357,67 @@ window.addEventListener("keydown", (e) => {
 });
 
 startBtn.addEventListener("click", startGame);
+
+// ---- Shop ---------------------------------------------------------------
+const shopEl = document.getElementById("shop");
+const shopGrid = document.getElementById("shop-grid");
+const shopBalanceEl = document.getElementById("shop-balance");
+const shopOpen = () => !shopEl.classList.contains("hidden");
+
+function renderShop() {
+  shopBalanceEl.textContent = coinBalance;
+  shopGrid.innerHTML = "";
+  for (const s of SKINS) {
+    const isOwned = owned.includes(s.id);
+    const isEquipped = equippedSkin === s.id;
+
+    const card = document.createElement("div");
+    card.className = "skin-card" + (isEquipped ? " equipped" : "");
+    card.innerHTML =
+      '<div class="skin-preview">' +
+        '<span class="pv-head" style="background:' + hex(s.skinColor) + '"></span>' +
+        '<span class="pv-body" style="background:' + hex(s.shirt) + '"></span>' +
+      "</div>" +
+      '<div class="skin-name">' + s.name + "</div>" +
+      '<div class="skin-price">' + (s.price === 0 ? "Free" : "🪙 " + s.price) + "</div>";
+
+    const btn = document.createElement("button");
+    if (isEquipped) {
+      btn.className = "tag";
+      btn.textContent = "✓ Equipped";
+      btn.disabled = true;
+      btn.style.background = "transparent";
+      btn.style.border = "none";
+    } else if (isOwned) {
+      btn.className = "btn primary";
+      btn.textContent = "Equip";
+      btn.addEventListener("click", () => { applySkin(s.id); renderShop(); });
+    } else {
+      btn.className = "btn";
+      const affordable = coinBalance >= s.price;
+      btn.textContent = affordable ? "Buy" : "🪙 " + s.price;
+      btn.disabled = !affordable;
+      btn.addEventListener("click", () => {
+        if (coinBalance < s.price) return;
+        coinBalance -= s.price;
+        localStorage.setItem(COINS_KEY, String(coinBalance));
+        coinsEl.textContent = coinBalance;
+        owned.push(s.id);
+        localStorage.setItem(OWNED_KEY, JSON.stringify(owned));
+        applySkin(s.id);   // auto-equip on purchase
+        renderShop();
+      });
+    }
+    card.appendChild(btn);
+    shopGrid.appendChild(card);
+  }
+}
+
+function openShop() { renderShop(); shopEl.classList.remove("hidden"); }
+function closeShop() { shopEl.classList.add("hidden"); }
+document.getElementById("shop-btn").addEventListener("click", openShop);
+document.getElementById("shop-close").addEventListener("click", closeShop);
+shopEl.addEventListener("click", (e) => { if (e.target === shopEl) closeShop(); });
 
 // Touch: swipe to change lane, tap/swipe-up to jump.
 let touchX = 0, touchY = 0;
@@ -324,9 +456,11 @@ function update(dt) {
     nextSpawnZ += speed * dt;
     const gap = Math.max(9, 20 - distance * 0.006);
     if (nextSpawnZ >= FAR_Z + gap) {
-      spawnObstacle(FAR_Z);
+      const oLane = spawnObstacle(FAR_Z);
       // occasional second obstacle in a different lane once it's fast
       if (distance > 250 && Math.random() < 0.35) spawnObstacle(FAR_Z - 0.2);
+      // string of coins in a clear lane
+      if (Math.random() < 0.7) spawnCoinLine(oLane);
       nextSpawnZ = FAR_Z;
     }
   }
@@ -352,6 +486,19 @@ function update(dt) {
       else if (jumpY < 0.9) { gameOver(); }   // log: only clears if airborne
     }
     if (o.position.z > RECYCLE_Z) { scene.remove(o); obstacles.splice(i, 1); }
+  }
+  // scroll coins + spin + collect
+  for (let i = coinItems.length - 1; i >= 0; i--) {
+    const c = coinItems[i];
+    c.position.z += scroll;
+    c.rotation.y += dt * 4;
+    if (state === State.RUNNING && c.userData.lane === laneIndex &&
+        c.position.z > -1.3 && c.position.z < 1.3) {
+      collectCoin(c);
+      coinItems.splice(i, 1);
+      continue;
+    }
+    if (c.position.z > RECYCLE_Z) { scene.remove(c); coinItems.splice(i, 1); }
   }
 
   // player lane lerp + jump physics

@@ -32,8 +32,11 @@ On-screen buttons appear automatically on touch devices.
   as they scroll past the camera, so the forest is effectively infinite.
 - **Obstacles** — in-lane pine trees must be dodged by changing lanes; fallen
   logs must be jumped. Spacing tightens and world speed ramps up with distance.
-- **Score** — one point per metre travelled; your best is saved to
-  `localStorage`.
+- **Coins & shop** — collect spinning coins strung along the lanes; your
+  balance is banked immediately. Spend it in the 🛒 **Shop** to unlock and
+  equip six runner skins (Classic → Golden).
+- **Score** — one point per metre travelled. Best score, coin balance, owned
+  skins, and equipped skin are all saved to `localStorage`.
 
 ## Structure
 

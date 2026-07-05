@@ -28,6 +28,10 @@
             <div class="value" id="score">0</div>
           </div>
           <div class="stat">
+            <div class="label">🪙 Coins</div>
+            <div class="value" id="coins">0</div>
+          </div>
+          <div class="stat">
             <div class="label">Best</div>
             <div class="value" id="best">0</div>
           </div>
@@ -38,8 +42,11 @@
         <!-- three.js renders its canvas into here -->
         <div class="overlay" id="overlay">
           <h3 id="ov-title">Forest Run 3D</h3>
-          <p id="ov-text">Switch lanes to weave between the trees and jump the fallen logs. The trail only gets faster.</p>
-          <button class="btn primary" id="start-btn">▶ Start Running</button>
+          <p id="ov-text">Switch lanes to weave between the trees and jump the fallen logs. Grab the coins — spend them in the shop. The trail only gets faster.</p>
+          <div class="overlay-actions">
+            <button class="btn primary" id="start-btn">▶ Start Running</button>
+            <button class="btn ghost" id="shop-btn">🛒 Shop</button>
+          </div>
         </div>
       </div>
 
@@ -57,6 +64,21 @@
     </div>
 
     <footer class="site">🌲 Susam's Games · Forest Run 3D · built with three.js</footer>
+  </div>
+
+  <!-- Shop modal -->
+  <div class="modal hidden" id="shop">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>🛒 Runner Shop</h3>
+        <div class="coin-pill">🪙 <span id="shop-balance">0</span></div>
+      </div>
+      <p class="modal-sub">Collect coins on the trail, then unlock and equip a new look.</p>
+      <div class="shop-grid" id="shop-grid"></div>
+      <div class="modal-foot">
+        <button class="btn" id="shop-close">Close</button>
+      </div>
+    </div>
   </div>
 
   <script type="module" src="js/forest-run.js"></script>
