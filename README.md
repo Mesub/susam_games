@@ -1,47 +1,49 @@
-# 🌲 Forest Run 3D
+# ⚽ Penalty Shootout
 
-An endless runner built with [three.js](https://threejs.org/). Sprint down a
-forest trail, switch between three lanes to weave past the trees, and jump the
-fallen logs. The trail only gets faster.
+A one-button football game. Step up to the penalty spot, pick your corner,
+and beat the keeper. Every shot is a three-beat rhythm — **direction**, then
+**height**, then **power** — all timed with a single tap. Score as many as you
+can before the keeper stops you three times. He reads you better the longer
+your streak runs.
 
-Everything you see — trees, logs, ground, and the runner — is generated from
-procedural geometry. There are no image or model assets, and three.js is
-vendored locally, so the game runs **completely offline**.
+Everything is drawn with the 2D canvas — the pitch, the goal and net, the
+keeper, and the ball are all procedural. There are **no image or model
+assets** and no libraries, so the game runs **completely offline**.
 
 ## Play
 
 Just open `index.html` in any modern browser. No build step, no server needed.
 
-```
-# or, if your browser blocks module scripts over file://
-python3 -m http.server 8000   # then visit http://localhost:8000
-```
-
 ## Controls
 
-| Action        | Keyboard                          | Touch            |
-|---------------|-----------------------------------|------------------|
-| Change lane   | `←` `→` or `A` `D`                | swipe left/right |
-| Jump          | `Space` / `↑` / `W`               | tap or swipe up  |
+| Action                                    | Keyboard          | Touch              |
+|-------------------------------------------|-------------------|--------------------|
+| Set direction / height / power, and shoot | `Space` / `Enter` | tap the pitch or the **Shoot** button |
 
-On-screen buttons appear automatically on touch devices.
+Each penalty takes three taps:
+
+1. **Direction** — a marker sweeps across the goal mouth; tap to lock your side.
+2. **Height** — a marker sweeps up the goal; tap to lock how high you hit it.
+3. **Power** — a meter oscillates; tap to strike. Aim for the green sweet spot —
+   harder shots give the keeper less time, but overcook a high one and it flies
+   over the bar.
 
 ## How it works
 
-- **Endless trail** — ground tiles and roadside trees are pooled and recycled
-  as they scroll past the camera, so the forest is effectively infinite.
-- **Obstacles** — in-lane pine trees must be dodged by changing lanes; fallen
-  logs must be jumped. Spacing tightens and world speed ramps up with distance.
-- **Score** — one point per metre travelled; your best is saved to
-  `localStorage`.
+- **The keeper** picks a zone to dive into. Early on he mostly guesses, but as
+  your goal streak grows he reads your aim more often — later penalties demand
+  the corners.
+- **On target** means inside the posts and under the bar. Miss wide, sky it over
+  the bar, or let the keeper get a glove to it, and you lose one of your three
+  lives.
+- **Score** — one point per goal; your best is saved to `localStorage`.
 
 ## Structure
 
 ```
-index.html            # page + HUD + import map
-css/theme.css         # shared neon/forest theme
-js/forest-run.js      # the game (three.js)
-js/vendor/            # vendored three.js module build
+index.html         # page + HUD + overlay
+css/theme.css      # shared neon theme
+js/football.js     # the game (2D canvas, zero dependencies)
 ```
 
 Part of **Susam's Games**.

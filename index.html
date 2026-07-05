@@ -3,29 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Forest Run 3D — Susam's Games</title>
+  <title>Penalty Shootout — Susam's Games</title>
   <link rel="stylesheet" href="css/theme.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E" />
-  <!-- Load three.js locally (vendored) so the game runs fully offline. -->
-  <script type="importmap">
-  { "imports": { "three": "./js/vendor/three.module.js" } }
-  </script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* The pitch keeps a fixed 3:2 aspect so the logical drawing space maps cleanly. */
+    #stage { width: min(560px, 92vw); aspect-ratio: 3 / 2; }
+    #pitch { width: 100%; height: 100%; display: block; }
+    .lives .value { letter-spacing: 2px; color: var(--neon-3); }
+    /* Single big shoot button replaces the generic dpad for this game. */
+    .shoot {
+      display: none;
+      margin-top: 4px;
+    }
+    .shoot button {
+      padding: 14px 42px;
+      font-size: 18px;
+      border-radius: 16px;
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .shoot { display: block; }
+    }
+  </style>
 </head>
 <body>
   <div class="wrap">
     <div class="brand">
-      <div class="logo">🌲</div>
-      <h1>Forest Run 3D</h1>
+      <div class="logo">⚽</div>
+      <h1>Penalty Shootout</h1>
     </div>
-    <p class="tagline">Sprint down the forest trail. Dodge the trees. Leap the logs.</p>
+    <p class="tagline">Step up to the spot. Pick your corner. Beat the keeper.</p>
 
     <div class="game-shell">
       <div class="game-head">
-        <h2>Run</h2>
+        <h2>Shoot</h2>
         <div class="scoreboard">
           <div class="stat">
-            <div class="label">Score</div>
+            <div class="label">Goals</div>
             <div class="value" id="score">0</div>
+          </div>
+          <div class="stat lives">
+            <div class="label">Lives</div>
+            <div class="value" id="lives">●●●</div>
           </div>
           <div class="stat">
             <div class="label">Best</div>
@@ -35,30 +54,27 @@
       </div>
 
       <div class="stage" id="stage">
-        <!-- three.js renders its canvas into here -->
+        <canvas id="pitch" width="720" height="480"></canvas>
         <div class="overlay" id="overlay">
-          <h3 id="ov-title">Forest Run 3D</h3>
-          <p id="ov-text">Switch lanes to weave between the trees and jump the fallen logs. The trail only gets faster.</p>
-          <button class="btn primary" id="start-btn">▶ Start Running</button>
+          <h3 id="ov-title">Penalty Shootout</h3>
+          <p id="ov-text">Three taps per shot: lock the direction, lock the height, then time the power. Score as many as you can — you get three misses.</p>
+          <button class="btn primary" id="start-btn">▶ Take the Spot</button>
         </div>
       </div>
 
       <p class="controls-hint">
-        <kbd>←</kbd> <kbd>→</kbd> / <kbd>A</kbd> <kbd>D</kbd> change lane &nbsp;·&nbsp;
-        <kbd>Space</kbd> / <kbd>↑</kbd> jump &nbsp;·&nbsp; swipe on mobile
+        <kbd>Space</kbd> / tap the pitch — one button, three beats:
+        aim &nbsp;→&nbsp; height &nbsp;→&nbsp; power
       </p>
 
-      <div class="dpad" id="dpad" aria-hidden="true">
-        <button class="up" data-act="jump">⤒</button>
-        <button class="left" data-act="left">◀</button>
-        <button class="down" data-act="jump">⤓</button>
-        <button class="right" data-act="right">▶</button>
+      <div class="shoot" id="shoot-wrap">
+        <button class="btn primary" id="shoot-btn">⚽ Shoot</button>
       </div>
     </div>
 
-    <footer class="site">🌲 Susam's Games · Forest Run 3D · built with three.js</footer>
+    <footer class="site">⚽ Susam's Games · Penalty Shootout · pure canvas, no assets</footer>
   </div>
 
-  <script type="module" src="js/forest-run.js"></script>
+  <script type="module" src="js/football.js"></script>
 </body>
 </html>
