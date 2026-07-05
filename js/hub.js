@@ -71,6 +71,14 @@ const GAMES = [
     tags: ["runner", "endless", "chase", "dino"],
   },
   {
+    slug: "derby",
+    title: "Crash Derby",
+    emoji: "🚗",
+    blurb: "Ram rival cars for points. Boost into big hits, chain combos, keep your armor up.",
+    cats: ["arcade"],
+    tags: ["driving", "cars", "demolition", "derby", "crash"],
+  },
+  {
     slug: "flap",
     title: "Flap",
     emoji: "🐤",
