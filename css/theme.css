@@ -1,6 +1,8 @@
 /* ==========================================================================
    Susam's Arcade — shared theme
    A neon / retro-modern aesthetic shared across the hub and every game.
+   Game-specific styling (e.g. Forest Run's shop + mobile layout) lives in its
+   own stylesheet so this file stays generic for all games.
    ========================================================================== */
 
 :root {
@@ -253,6 +255,8 @@ a:hover { color: var(--ink); }
 .stat .label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-faint); }
 .stat .value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
+/* Generic stage wraps a canvas or board at its natural size. Games that need
+   a fixed aspect ratio (e.g. Forest Run) opt in via their own stylesheet. */
 .stage {
   position: relative;
   border-radius: var(--radius);
@@ -273,6 +277,7 @@ canvas { display: block; }
 .overlay {
   position: absolute;
   inset: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -287,6 +292,12 @@ canvas { display: block; }
 .overlay.hidden { opacity: 0; pointer-events: none; }
 .overlay h3 { margin: 0; font-size: 30px; }
 .overlay p { margin: 0; color: var(--ink-dim); max-width: 320px; }
+.overlay-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
 .controls-hint {
   color: var(--ink-faint);
@@ -304,7 +315,7 @@ canvas { display: block; }
   color: var(--ink);
 }
 
-/* On-screen dpad for touch devices */
+/* On-screen dpad for touch devices (games that use the grid dpad markup) */
 .dpad {
   display: none;
   grid-template-columns: repeat(3, 60px);
