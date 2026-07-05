@@ -58,11 +58,9 @@ coinsEl.textContent = coinBalance;
 // ---- Renderer / scene / camera ------------------------------------------
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-renderer.setSize(W, H);
+renderer.setSize(W, H, false);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.domElement.style.maxWidth = "100%";
-renderer.domElement.style.height = "auto";
 stage.insertBefore(renderer.domElement, overlay);
 
 const scene = new THREE.Scene();
@@ -70,9 +68,32 @@ const SKY = 0x8fc9e8;
 scene.background = new THREE.Color(SKY);
 scene.fog = new THREE.Fog(SKY, 40, 130);
 
-const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 300);
+const BASE_VFOV = 60;
+const BASE_ASPECT = W / H;
+// horizontal "spread" we want to keep constant across screen shapes
+const HORIZ = Math.tan((BASE_VFOV * Math.PI) / 360) * BASE_ASPECT;
+const camera = new THREE.PerspectiveCamera(BASE_VFOV, BASE_ASPECT, 0.1, 300);
 camera.position.set(0, 4.2, 9);
 camera.lookAt(0, 1.4, -14);
+
+// Size the renderer to the stage element and keep the three lanes framed on
+// any aspect ratio (portrait phones widen the vertical FOV so nothing clips).
+function resize() {
+  const w = stage.clientWidth;
+  const h = stage.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  const aspect = w / h;
+  camera.aspect = aspect;
+  camera.fov = aspect < BASE_ASPECT
+    ? Math.min(86, (Math.atan(HORIZ / aspect) * 360) / Math.PI)
+    : BASE_VFOV;
+  camera.updateProjectionMatrix();
+}
+if (window.ResizeObserver) new ResizeObserver(resize).observe(stage);
+window.addEventListener("resize", resize);
+window.addEventListener("orientationchange", () => setTimeout(resize, 200));
+resize();
 
 // ---- Lights -------------------------------------------------------------
 const hemi = new THREE.HemisphereLight(0xcfe8ff, 0x2b4a2f, 0.9);
@@ -419,13 +440,29 @@ document.getElementById("shop-btn").addEventListener("click", openShop);
 document.getElementById("shop-close").addEventListener("click", closeShop);
 shopEl.addEventListener("click", (e) => { if (e.target === shopEl) closeShop(); });
 
-// Touch: swipe to change lane, tap/swipe-up to jump.
+// Overlaid on-screen buttons (touch devices). pointerdown = snappy response.
+const touchEl = document.getElementById("touch");
+touchEl.addEventListener("pointerdown", (e) => {
+  const act = e.target.getAttribute("data-act");
+  if (!act) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (act === "left") moveLane(-1);
+  else if (act === "right") moveLane(1);
+  else if (act === "jump") jump();
+});
+
+// Touch: swipe anywhere on the canvas to change lane, tap/swipe-up to jump.
 let touchX = 0, touchY = 0;
 stage.addEventListener("touchstart", (e) => {
+  // Ignore taps on the on-screen buttons and on the menu/game-over overlay —
+  // those have their own handlers and shouldn't be read as game gestures.
+  if (e.target.closest("#touch, .overlay")) return;
   const t = e.changedTouches[0];
   touchX = t.clientX; touchY = t.clientY;
 }, { passive: true });
 stage.addEventListener("touchend", (e) => {
+  if (e.target.closest("#touch, .overlay")) return;
   if (state !== State.RUNNING) { startGame(); return; }
   const t = e.changedTouches[0];
   const dx = t.clientX - touchX, dy = t.clientY - touchY;
@@ -433,14 +470,6 @@ stage.addEventListener("touchend", (e) => {
   if (Math.abs(dx) > Math.abs(dy)) moveLane(dx > 0 ? 1 : -1);
   else if (dy < 0) jump();
 }, { passive: true });
-
-// On-screen dpad
-document.getElementById("dpad").addEventListener("click", (e) => {
-  const act = e.target.getAttribute("data-act");
-  if (act === "left") moveLane(-1);
-  else if (act === "right") moveLane(1);
-  else if (act === "jump") jump();
-});
 
 // ---- Main loop -----------------------------------------------------------
 const clock = new THREE.Clock();

@@ -195,6 +195,10 @@ a:hover { color: var(--ink); }
 
 .stage {
   position: relative;
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 72 / 44;
+  margin: 0 auto;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg-soft);
@@ -202,11 +206,16 @@ a:hover { color: var(--ink); }
   overflow: hidden;
   touch-action: none;
 }
-canvas { display: block; }
+.stage canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
 
 .overlay {
   position: absolute;
   inset: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -238,30 +247,77 @@ canvas { display: block; }
   color: var(--ink);
 }
 
-/* On-screen dpad for touch devices */
-.dpad {
+/* On-screen touch controls, overlaid on the canvas (touch devices only) */
+.touch {
   display: none;
-  grid-template-columns: repeat(3, 60px);
-  grid-template-rows: repeat(2, 60px);
-  gap: 8px;
-  justify-content: center;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none; /* only the buttons capture input */
 }
-.dpad button {
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--panel);
+.touch button {
+  pointer-events: auto;
+  -webkit-user-select: none; user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(18, 23, 50, 0.55);
+  backdrop-filter: blur(4px);
   color: var(--ink);
-  font-size: 22px;
+  font-weight: 700;
   cursor: pointer;
+  touch-action: none;
 }
-.dpad button:active { background: var(--panel-solid); }
-.dpad .up   { grid-column: 2; grid-row: 1; }
-.dpad .left { grid-column: 1; grid-row: 2; }
-.dpad .down { grid-column: 2; grid-row: 2; }
-.dpad .right{ grid-column: 3; grid-row: 2; }
+.touch button:active { background: rgba(76, 201, 240, 0.35); transform: scale(0.96); }
+.touch-left {
+  position: absolute;
+  left: 14px; bottom: 14px;
+  display: flex;
+  gap: 12px;
+}
+.touch-left button { width: 62px; height: 62px; font-size: 24px; }
+.touch-jump {
+  position: absolute;
+  right: 14px; bottom: 14px;
+  width: 100px; height: 62px;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
 
 @media (hover: none) and (pointer: coarse) {
-  .dpad { display: grid; }
+  .touch { display: block; }
+}
+
+/* ---- Mobile-first full-height layout --------------------------------- */
+@media (max-width: 640px) {
+  html, body { height: 100%; overflow: hidden; }
+  .wrap {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+  .brand { gap: 10px; margin-bottom: 0; }
+  .brand .logo { width: 34px; height: 34px; font-size: 20px; border-radius: 9px; }
+  .brand h1 { font-size: 22px; }
+  .tagline { display: none; }
+
+  .game-shell { flex: 1; width: 100%; gap: 8px; }
+  .game-head { max-width: none; }
+  .game-head h2 { display: none; } /* redundant on mobile */
+  .scoreboard { width: 100%; gap: 8px; }
+  .stat { flex: 1; min-width: 0; padding: 6px 8px; }
+  .stat .value { font-size: 19px; }
+
+  .stage {
+    flex: 1;
+    max-width: none;
+    aspect-ratio: auto; /* fill the leftover height instead */
+    min-height: 0;
+  }
+  .controls-hint { display: none; }
+  footer.site { display: none; }
 }
 
 .overlay-actions {

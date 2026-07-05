@@ -40,6 +40,16 @@
 
       <div class="stage" id="stage">
         <!-- three.js renders its canvas into here -->
+
+        <!-- Touch controls overlaid on the canvas (only shown on touch devices) -->
+        <div class="touch" id="touch" aria-hidden="true">
+          <div class="touch-left">
+            <button data-act="left" aria-label="Move left">◀</button>
+            <button data-act="right" aria-label="Move right">▶</button>
+          </div>
+          <button class="touch-jump" data-act="jump" aria-label="Jump">JUMP</button>
+        </div>
+
         <div class="overlay" id="overlay">
           <h3 id="ov-title">Forest Run 3D</h3>
           <p id="ov-text">Switch lanes to weave between the trees and jump the fallen logs. Grab the coins — spend them in the shop. The trail only gets faster.</p>
@@ -52,15 +62,8 @@
 
       <p class="controls-hint">
         <kbd>←</kbd> <kbd>→</kbd> / <kbd>A</kbd> <kbd>D</kbd> change lane &nbsp;·&nbsp;
-        <kbd>Space</kbd> / <kbd>↑</kbd> jump &nbsp;·&nbsp; swipe on mobile
+        <kbd>Space</kbd> / <kbd>↑</kbd> jump &nbsp;·&nbsp; swipe or use the on-screen buttons on mobile
       </p>
-
-      <div class="dpad" id="dpad" aria-hidden="true">
-        <button class="up" data-act="jump">⤒</button>
-        <button class="left" data-act="left">◀</button>
-        <button class="down" data-act="jump">⤓</button>
-        <button class="right" data-act="right">▶</button>
-      </div>
     </div>
 
     <footer class="site">🌲 Susam's Games · Forest Run 3D · built with three.js</footer>
