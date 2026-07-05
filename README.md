@@ -19,6 +19,7 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 | Game | Genre | What it is |
 |------|-------|------------|
 | 🌲 **Forest Run 3D** | Arcade | A 3D endless runner (three.js) — weave past trees, jump logs. |
+| ⚽ **Penalty Shootout** | Arcade | Aim, pick your height, time the power — beat the keeper from the spot. |
 | 🐍 **Snake** | Classic | Eat, grow, don't bite your tail. |
 | 🧱 **Block Drop** | Puzzle | Tetris — rotate and stack tetrominoes, clear lines. |
 | 🎯 **Brick Breaker** | Arcade | Breakout — bounce the ball, smash every brick. |
