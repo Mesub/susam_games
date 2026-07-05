@@ -63,6 +63,14 @@ const GAMES = [
     tags: ["cards", "pairs", "concentration"],
   },
   {
+    slug: "dino",
+    title: "Dino Run",
+    emoji: "🦖",
+    blurb: "Jump cacti, duck pterodactyls — and outrun the T-Rex on your tail.",
+    cats: ["arcade"],
+    tags: ["runner", "endless", "chase", "dino"],
+  },
+  {
     slug: "flap",
     title: "Flap",
     emoji: "🐤",
