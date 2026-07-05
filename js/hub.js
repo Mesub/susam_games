@@ -79,6 +79,14 @@ const GAMES = [
     tags: ["driving", "cars", "demolition", "derby", "crash"],
   },
   {
+    slug: "hillclimb",
+    title: "Hill Climb Racer",
+    emoji: "🚵",
+    blurb: "Gun the throttle up rolling hills in a car or bike — balance it, grab fuel and coins, don't flip.",
+    cats: ["arcade"],
+    tags: ["driving", "physics", "hills", "cars", "motorbike", "obstacle", "climb"],
+  },
+  {
     slug: "flap",
     title: "Flap",
     emoji: "🐤",

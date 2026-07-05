@@ -22,6 +22,7 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 | 🦖 **Dino Run** | Arcade | Jump cacti, duck pterodactyls, and outrun the T-Rex chasing you. |
 | ⚽ **Penalty Shootout** | Arcade | Aim, pick your height, time the power — beat the keeper from the spot. |
 | 🚗 **Crash Derby** | Arcade | Ram rival cars for points — boost into big hits, chain combos, survive. |
+| 🚵 **Hill Climb Racer** | Arcade | Drive a car or bike up rolling hills — balance it, grab fuel and coins, don't flip. |
 | 🐍 **Snake** | Classic | Eat, grow, don't bite your tail. |
 | 🧱 **Block Drop** | Puzzle | Tetris — rotate and stack tetrominoes, clear lines. |
 | 🎯 **Brick Breaker** | Arcade | Breakout — bounce the ball, smash every brick. |

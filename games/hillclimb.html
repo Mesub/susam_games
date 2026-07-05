@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Hill Climb Racer — Susam's Games</title>
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%B5%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* Wide side-scroller aspect keeps a good view of the hills ahead. */
+    #stage { width: min(880px, 94vw); aspect-ratio: 16 / 9; }
+    #track { width: 100%; height: 100%; display: block; }
+    .fuel .value { display: none; }
+    .action-buttons {
+      display: none;
+      gap: 10px;
+      width: 100%;
+      justify-content: space-between;
+    }
+    .action-buttons button {
+      flex: 1;
+      padding: 16px 10px;
+      font-size: 16px;
+      border-radius: 16px;
+    }
+    /* On touch devices the gas/brake buttons pin to the bottom of the
+       viewport as a fixed HUD, same reasoning as Crash Derby: in normal
+       document flow they'd land below the fold on short phone screens. */
+    @media (hover: none) and (pointer: coarse) {
+      .action-buttons { display: flex; }
+      .controls-hint { display: none; }
+      footer.site { display: none; }
+      .mobile-controls {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 30;
+        display: flex;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+        background: linear-gradient(to top, rgba(11, 14, 26, 0.92), rgba(11, 14, 26, 0.65) 65%, transparent);
+      }
+      .game-shell { padding-bottom: 110px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../index.html">← All games</a>
+
+    <div class="brand">
+      <div class="logo">🚵</div>
+      <h1>Hill Climb Racer</h1>
+    </div>
+    <p class="tagline">Gun the throttle up rolling hills — balance your ride, grab fuel and coins, don't flip.</p>
+
+    <div class="game-shell">
+      <div class="game-head">
+        <h2>Climb</h2>
+        <div class="scoreboard">
+          <div class="stat"><div class="label">Score</div><div class="value" id="score">0</div></div>
+          <div class="stat"><div class="label">Coins</div><div class="value" id="coins">0</div></div>
+          <div class="stat"><div class="label">Best</div><div class="value" id="best">0</div></div>
+          <div class="stat stat-wide fuel">
+            <div class="label">⛽ Fuel</div>
+            <div class="meter"><i id="fuel-fill" style="width:100%"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <canvas id="track" width="960" height="540"></canvas>
+        <div class="overlay" id="overlay">
+          <h3 id="ov-title">Hill Climb Racer</h3>
+          <p id="ov-text">Hold gas to climb and to lean back in the air; hold brake to slow, reverse, or lean forward. Roll too far and you'll flip — land it and you'll pop a flip bonus. Pick your ride:</p>
+          <div class="overlay-actions">
+            <button class="btn primary" id="start-car">🚗 Car</button>
+            <button class="btn primary" id="start-bike">🚵 Bike</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="controls-hint">
+        <kbd>↑</kbd>/<kbd>→</kbd>/<kbd>W</kbd>/<kbd>D</kbd> gas · <kbd>↓</kbd>/<kbd>←</kbd>/<kbd>S</kbd>/<kbd>A</kbd> brake / reverse
+      </p>
+
+      <div class="mobile-controls">
+        <div class="action-buttons" id="action-buttons">
+          <button class="btn primary" id="brake-btn">⬅ Brake</button>
+          <button class="btn primary" id="gas-btn">Gas ➡</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site">🚵 Susam's Games · Hill Climb Racer · pure canvas, no assets</footer>
+  </div>
+
+  <script type="module" src="../js/hillclimb.js"></script>
+</body>
+</html>
