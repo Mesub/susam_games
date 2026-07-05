@@ -6,6 +6,15 @@
   <title>Dino Run — Susam's Games</title>
   <link rel="stylesheet" href="../css/theme.css" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%96%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* The 640x220 canvas is much wider than it is tall, so on narrow phones
+       the generic max-width:100%/height:auto scaling shrinks the stage to a
+       sliver too short to fit the overlay's title/text/button — and .stage
+       clips overflow, so the Start button was invisible. Force a floor. */
+    @media (max-width: 680px) {
+      #stage { min-height: 280px; }
+    }
+  </style>
 </head>
 <body>
   <div class="wrap">
