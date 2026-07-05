@@ -1,7 +1,9 @@
 /* ==========================================================================
    Crash Derby — top-down demolition derby. Ram rival cars to wreck them and
    score; hit harder than they hit you or your own armor eats the damage.
-   Boost trades a cooldown for extra ramming force. Canvas only, no assets.
+   Boost trades a cooldown for extra ramming force. A mounted gun lets you
+   chip rivals from a distance with no risk to your own armor. Canvas only,
+   no assets.
    ========================================================================== */
 const canvas = document.getElementById("arena");
 const ctx = canvas.getContext("2d");
@@ -46,7 +48,10 @@ const WRECK_BONUS = 60;
 const MAX_COMBO = 6;
 const COMBO_IDLE_LIMIT = 200;
 
-let player, aiCars, barrels, particles, score, combo, comboIdle, spawnTimer, running, shakeFrames;
+const BULLET_SPEED = 9.5, BULLET_RADIUS = 3, BULLET_DAMAGE = 8;
+const FIRE_COOLDOWN_FRAMES = 16;
+
+let player, aiCars, barrels, bullets, particles, score, combo, comboIdle, spawnTimer, running, shakeFrames;
 const keys = { up: false, down: false, left: false, right: false };
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
@@ -87,9 +92,10 @@ function spawnAI() {
 function reset() {
   player = {
     x: (ARENA.left + ARENA.right) / 2, y: ARENA.bottom - 70, angle: -Math.PI / 2,
-    speed: 0, hp: PLAYER_MAX_HP, boostFrames: 0, boostCooldown: 0, invuln: 0,
+    speed: 0, hp: PLAYER_MAX_HP, boostFrames: 0, boostCooldown: 0, invuln: 0, fireCooldown: 0,
   };
   aiCars = [];
+  bullets = [];
   particles = [];
   barrels = makeBarrels();
   score = 0;
@@ -118,6 +124,19 @@ function tryBoost() {
   }
 }
 
+function tryFire() {
+  if (!running) { start(); return; }
+  if (player.fireCooldown > 0) return;
+  player.fireCooldown = FIRE_COOLDOWN_FRAMES;
+  const nose = CAR_LEN / 2 + 4;
+  bullets.push({
+    x: player.x + Math.cos(player.angle) * nose,
+    y: player.y + Math.sin(player.angle) * nose,
+    vx: Math.cos(player.angle) * BULLET_SPEED,
+    vy: Math.sin(player.angle) * BULLET_SPEED,
+  });
+}
+
 function gameOver() {
   running = false;
   const finalScore = Math.floor(score);
@@ -141,7 +160,7 @@ function damagePlayer(dmg) {
   if (player.hp <= 0) gameOver();
 }
 
-function registerRam(dmg) {
+function registerHit(dmg) {
   combo = Math.min(MAX_COMBO, combo + 1);
   comboIdle = 0;
   score += dmg * combo;
@@ -234,6 +253,7 @@ function updatePlayer() {
   if (player.boostFrames > 0) player.boostFrames--;
   if (player.boostCooldown > 0) player.boostCooldown--;
   if (player.invuln > 0) player.invuln--;
+  if (player.fireCooldown > 0) player.fireCooldown--;
 }
 
 function updateAI(ai) {
@@ -297,7 +317,7 @@ function resolveCarCollision(ai) {
   if (closing > 0) {
     ai.hp -= dmg;
     damagePlayer(dmg * 0.22);
-    registerRam(dmg);
+    registerHit(dmg);
   } else {
     damagePlayer(dmg);
     ai.hp -= dmg * 0.15;
@@ -305,6 +325,25 @@ function resolveCarCollision(ai) {
   }
 
   if (ai.hp <= 0 && !ai.wrecked) wreckAI(ai);
+}
+
+function updateBullets() {
+  for (const b of bullets) {
+    b.x += b.vx;
+    b.y += b.vy;
+    if (b.hit) continue;
+    for (const ai of aiCars) {
+      if (ai.wrecked) continue;
+      if (Math.hypot(ai.x - b.x, ai.y - b.y) > CAR_R) continue;
+      b.hit = true;
+      ai.hp -= BULLET_DAMAGE;
+      registerHit(BULLET_DAMAGE);
+      spawnSparks(b.x, b.y);
+      if (ai.hp <= 0 && !ai.wrecked) wreckAI(ai);
+      break;
+    }
+  }
+  bullets = bullets.filter((b) => !b.hit && b.x > ARENA.left - 10 && b.x < ARENA.right + 10 && b.y > ARENA.top - 10 && b.y < ARENA.bottom + 10);
 }
 
 function update() {
@@ -317,6 +356,7 @@ function update() {
   separateAIs();
   for (const ai of aiCars) resolveCarCollision(ai);
   aiCars = aiCars.filter((ai) => !ai.wrecked);
+  updateBullets();
 
   spawnTimer--;
   if (aiCars.length < aiTargetCount() && spawnTimer <= 0) {
@@ -401,6 +441,11 @@ function draw() {
 
   drawCar(player.x, player.y, player.angle, player.boostFrames > 0 ? C("--gold") : C("--good"), "#123", player.invuln > 0 && shakeFrames > 0, player.boostFrames > 0);
 
+  ctx.fillStyle = C("--neon");
+  for (const b of bullets) {
+    ctx.beginPath(); ctx.arc(b.x, b.y, BULLET_RADIUS, 0, Math.PI * 2); ctx.fill();
+  }
+
   for (const p of particles) {
     ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
     ctx.fillStyle = p.color;
@@ -433,6 +478,7 @@ function setKey(code, on) {
 }
 window.addEventListener("keydown", (e) => {
   if (e.code === "Space") { tryBoost(); e.preventDefault(); return; }
+  if (e.code === "KeyF") { tryFire(); e.preventDefault(); return; }
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyS", "KeyD"].includes(e.code)) {
     if (!running) { start(); }
     setKey(e.code, true);
@@ -455,6 +501,7 @@ bindHold(document.getElementById("d-left"), "left");
 bindHold(document.getElementById("d-right"), "right");
 
 document.getElementById("boost-btn").addEventListener("pointerdown", (e) => { e.stopPropagation(); tryBoost(); });
+document.getElementById("shoot-btn").addEventListener("pointerdown", (e) => { e.stopPropagation(); tryFire(); });
 startBtn.addEventListener("click", (e) => { e.stopPropagation(); start(); });
 
 reset();

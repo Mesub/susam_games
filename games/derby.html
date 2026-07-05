@@ -12,17 +12,18 @@
     #arena { width: 100%; height: 100%; display: block; }
     .armor .value { color: var(--good); }
     .combo .value { color: var(--gold); }
-    .boost {
+    .action-buttons {
       display: none;
       margin-top: 4px;
+      gap: 10px;
     }
-    .boost button {
-      padding: 14px 42px;
+    .action-buttons button {
+      padding: 14px 30px;
       font-size: 18px;
       border-radius: 16px;
     }
     @media (hover: none) and (pointer: coarse) {
-      .boost { display: block; }
+      .action-buttons { display: flex; }
     }
   </style>
 </head>
@@ -34,7 +35,7 @@
       <div class="logo">🚗</div>
       <h1>Crash Derby</h1>
     </div>
-    <p class="tagline">Ram rival cars for points. Boost into big hits, chain combos, keep your armor above zero.</p>
+    <p class="tagline">Ram or shoot rival cars for points. Boost into big hits, chain combos, keep your armor above zero.</p>
 
     <div class="game-shell">
       <div class="game-head">
@@ -54,14 +55,14 @@
         <canvas id="arena" width="800" height="500"></canvas>
         <div class="overlay" id="overlay">
           <h3 id="ov-title">Crash Derby</h3>
-          <p id="ov-text">Drive into rival cars to wreck them and score. Hit harder than they hit you or your armor takes the damage instead. Tap Boost to ram with extra force — but watch the recoil.</p>
+          <p id="ov-text">Drive into rival cars to wreck them and score, or blast them from a distance with Shoot. Ram harder than they hit you or your armor takes the damage instead. Tap Boost to ram with extra force — but watch the recoil.</p>
           <button class="btn primary" id="start-btn">▶ Start Derby</button>
         </div>
       </div>
 
       <p class="controls-hint">
         <kbd>↑</kbd>/<kbd>W</kbd> gas · <kbd>↓</kbd>/<kbd>S</kbd> brake/reverse ·
-        <kbd>←</kbd><kbd>→</kbd>/<kbd>A</kbd><kbd>D</kbd> steer · <kbd>Space</kbd> boost
+        <kbd>←</kbd><kbd>→</kbd>/<kbd>A</kbd><kbd>D</kbd> steer · <kbd>Space</kbd> boost · <kbd>F</kbd> shoot
       </p>
 
       <div class="dpad" id="dpad">
@@ -70,8 +71,9 @@
         <button class="down" id="d-down">▼</button>
         <button class="right" id="d-right">▶</button>
       </div>
-      <div class="boost" id="boost-wrap">
+      <div class="action-buttons" id="action-buttons">
         <button class="btn primary" id="boost-btn">💥 Boost</button>
+        <button class="btn primary" id="shoot-btn">🔫 Shoot</button>
       </div>
     </div>
 
