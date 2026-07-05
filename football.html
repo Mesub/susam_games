@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Penalty Shootout — Susam's Games</title>
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* The pitch keeps a fixed 3:2 aspect so the logical drawing space maps cleanly. */
+    #stage { width: min(560px, 92vw); aspect-ratio: 3 / 2; }
+    #pitch { width: 100%; height: 100%; display: block; }
+    .lives .value { letter-spacing: 2px; color: var(--neon-3); }
+    /* Single big shoot button replaces the generic dpad for this game. */
+    .shoot {
+      display: none;
+      margin-top: 4px;
+    }
+    .shoot button {
+      padding: 14px 42px;
+      font-size: 18px;
+      border-radius: 16px;
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .shoot { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← All games</a>
+
+    <div class="brand">
+      <div class="logo">⚽</div>
+      <h1>Penalty Shootout</h1>
+    </div>
+    <p class="tagline">Step up to the spot. Pick your corner. Beat the keeper.</p>
+
+    <div class="game-shell">
+      <div class="game-head">
+        <h2>Shoot</h2>
+        <div class="scoreboard">
+          <div class="stat">
+            <div class="label">Goals</div>
+            <div class="value" id="score">0</div>
+          </div>
+          <div class="stat lives">
+            <div class="label">Lives</div>
+            <div class="value" id="lives">●●●</div>
+          </div>
+          <div class="stat">
+            <div class="label">Best</div>
+            <div class="value" id="best">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <canvas id="pitch" width="720" height="480"></canvas>
+        <div class="overlay" id="overlay">
+          <h3 id="ov-title">Penalty Shootout</h3>
+          <p id="ov-text">Three taps per shot: lock the direction, lock the height, then time the power. Score as many as you can — you get three misses.</p>
+          <button class="btn primary" id="start-btn">▶ Take the Spot</button>
+        </div>
+      </div>
+
+      <p class="controls-hint">
+        <kbd>Space</kbd> / tap the pitch — one button, three beats:
+        aim &nbsp;→&nbsp; height &nbsp;→&nbsp; power
+      </p>
+
+      <div class="shoot" id="shoot-wrap">
+        <button class="btn primary" id="shoot-btn">⚽ Shoot</button>
+      </div>
+    </div>
+
+    <footer class="site">⚽ Susam's Games · Penalty Shootout · pure canvas, no assets</footer>
+  </div>
+
+  <script type="module" src="js/football.js"></script>
+</body>
+</html>

@@ -1,49 +1,58 @@
-# ⚽ Penalty Shootout
+# 🕹️ Susam's Games
 
-A one-button football game. Step up to the penalty spot, pick your corner,
-and beat the keeper. Every shot is a three-beat rhythm — **direction**, then
-**height**, then **power** — all timed with a single tap. Score as many as you
-can before the keeper stops you three times. He reads you better the longer
-your streak runs.
+A little arcade of browser games sharing one neon theme. Everything is
+drawn procedurally or from vendored code — **no external assets, no build
+step, no server** — so every game runs completely offline. Open
+`index.html` to reach the hub, then pick a game.
 
-Everything is drawn with the 2D canvas — the pitch, the goal and net, the
-keeper, and the ball are all procedural. There are **no image or model
-assets** and no libraries, so the game runs **completely offline**.
+## Games
+
+| Game | Page | Built with |
+|------|------|------------|
+| ⚽ **Penalty Shootout** | `football.html` | 2D canvas, zero dependencies |
+| 🌲 **Forest Run 3D** | `forest-run.html` | vendored [three.js](https://threejs.org/) |
+
+### ⚽ Penalty Shootout
+
+A one-button football game. Step up to the penalty spot and beat the keeper.
+Every shot is a three-beat rhythm — **direction**, then **height**, then
+**power** — all timed with a single tap. Aim for the green sweet spot on the
+power meter: harder shots give the keeper less time, but overcook a high one
+and it flies over the bar. Score as many as you can before the keeper stops
+you three times. He reads your aim more often the longer your streak runs.
+Best score is saved to `localStorage`.
+
+### 🌲 Forest Run 3D
+
+An endless three.js runner. Sprint down a forest trail, switch between three
+lanes to weave past the trees, and jump the fallen logs. The trail only gets
+faster. Trees, logs, ground, and the runner are all procedural geometry, and
+three.js is vendored locally, so it too runs fully offline.
 
 ## Play
 
 Just open `index.html` in any modern browser. No build step, no server needed.
 
-## Controls
-
-| Action                                    | Keyboard          | Touch              |
-|-------------------------------------------|-------------------|--------------------|
-| Set direction / height / power, and shoot | `Space` / `Enter` | tap the pitch or the **Shoot** button |
-
-Each penalty takes three taps:
-
-1. **Direction** — a marker sweeps across the goal mouth; tap to lock your side.
-2. **Height** — a marker sweeps up the goal; tap to lock how high you hit it.
-3. **Power** — a meter oscillates; tap to strike. Aim for the green sweet spot —
-   harder shots give the keeper less time, but overcook a high one and it flies
-   over the bar.
-
-## How it works
-
-- **The keeper** picks a zone to dive into. Early on he mostly guesses, but as
-  your goal streak grows he reads your aim more often — later penalties demand
-  the corners.
-- **On target** means inside the posts and under the bar. Miss wide, sky it over
-  the bar, or let the keeper get a glove to it, and you lose one of your three
-  lives.
-- **Score** — one point per goal; your best is saved to `localStorage`.
+```
+# or, if your browser blocks module scripts over file://
+python3 -m http.server 8000   # then visit http://localhost:8000
+```
 
 ## Structure
 
 ```
-index.html         # page + HUD + overlay
-css/theme.css      # shared neon theme
-js/football.js     # the game (2D canvas, zero dependencies)
+index.html            # the hub — grid of game cards
+football.html         # Penalty Shootout page
+forest-run.html       # Forest Run 3D page
+css/theme.css         # shared neon theme (hub + every game)
+js/football.js        # Penalty Shootout (2D canvas)
+js/forest-run.js      # Forest Run 3D (three.js)
+js/vendor/            # vendored three.js module build
 ```
 
-Part of **Susam's Games**.
+## Adding a game
+
+Each game is a standalone page that links back to the hub with
+`<a class="back" href="index.html">← All games</a>`. To add one, drop in a new
+`<game>.html`, its script under `js/`, and a `.card` link in `index.html`.
+The shared `css/theme.css` handles the rest.
