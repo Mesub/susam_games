@@ -92,7 +92,7 @@ function spawnAI() {
 function reset() {
   player = {
     x: (ARENA.left + ARENA.right) / 2, y: ARENA.bottom - 70, angle: -Math.PI / 2,
-    speed: 0, hp: PLAYER_MAX_HP, boostFrames: 0, boostCooldown: 0, invuln: 0, fireCooldown: 0,
+    speed: 0, hp: 0, boostFrames: 0, boostCooldown: 0, invuln: 0, fireCooldown: 0,
   };
   aiCars = [];
   bullets = [];
@@ -106,7 +106,7 @@ function reset() {
   running = false;
   scoreEl.textContent = "0";
   comboEl.textContent = "x1";
-  armorFill.style.width = "100%";
+  armorFill.style.width = "0%";
   for (let i = 0; i < 3; i++) spawnAI();
 }
 
