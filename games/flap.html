@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Flap — Susam's Games</title>
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%A4%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../index.html">← All games</a>
+    <div class="brand"><div class="logo">🐤</div><h1>Flap</h1></div>
+    <p class="tagline">Tap to fly. Thread the pipes. One touch and you're toast.</p>
+
+    <div class="game-shell">
+      <div class="game-head">
+        <h2>Fly</h2>
+        <div class="scoreboard">
+          <div class="stat"><div class="label">Score</div><div class="value" id="score">0</div></div>
+          <div class="stat"><div class="label">Best</div><div class="value" id="best">0</div></div>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <canvas id="c" width="420" height="480"></canvas>
+        <div class="overlay" id="overlay">
+          <h3 id="ov-title">Flap</h3>
+          <p id="ov-text">Press Space, click, or tap to flap upward. Fly through the gaps — don't hit a pipe or the ground.</p>
+          <button class="btn primary" id="start-btn">▶ Start</button>
+        </div>
+      </div>
+
+      <p class="controls-hint"><kbd>Space</kbd> / click / tap to flap</p>
+    </div>
+
+    <footer class="site">🐤 Susam's Games · Flap</footer>
+  </div>
+
+  <script type="module" src="../js/flap.js"></script>
+</body>
+</html>

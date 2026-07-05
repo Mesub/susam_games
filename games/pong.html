@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Pong — Susam's Games</title>
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%93%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../index.html">← All games</a>
+    <div class="brand"><div class="logo">🏓</div><h1>Pong</h1></div>
+    <p class="tagline">The original video game. You vs. a sharp CPU paddle — first to 7 wins.</p>
+
+    <div class="game-shell">
+      <div class="game-head">
+        <h2>Rally</h2>
+        <div class="scoreboard">
+          <div class="stat"><div class="label">You</div><div class="value" id="you">0</div></div>
+          <div class="stat"><div class="label">CPU</div><div class="value" id="cpu">0</div></div>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <canvas id="c" width="560" height="400"></canvas>
+        <div class="overlay" id="overlay">
+          <h3 id="ov-title">Pong</h3>
+          <p id="ov-text">Move your paddle with the mouse, W/S, or the up/down arrows. First to 7 points takes the match.</p>
+          <button class="btn primary" id="start-btn">▶ Start</button>
+        </div>
+      </div>
+
+      <p class="controls-hint"><kbd>↑</kbd> <kbd>↓</kbd> / <kbd>W</kbd> <kbd>S</kbd> or move the mouse / drag on mobile</p>
+    </div>
+
+    <footer class="site">🏓 Susam's Games · Pong</footer>
+  </div>
+
+  <script type="module" src="../js/pong.js"></script>
+</body>
+</html>

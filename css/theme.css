@@ -120,6 +120,52 @@ a:hover { color: var(--ink); }
 }
 .back:hover { color: var(--ink); }
 
+/* ---- Hub toolbar: search + category chips ----------------------------- */
+.hub-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+.search {
+  flex: 1 1 260px;
+  min-width: 200px;
+  padding: 11px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+}
+.search::placeholder { color: var(--ink-faint); }
+.search:focus { border-color: rgba(120, 140, 255, 0.55); }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 9px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--ink-dim);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.chip:hover { color: var(--ink); border-color: rgba(120, 140, 255, 0.5); }
+.chip.active {
+  color: #06122a;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--neon), var(--neon-2));
+}
+.empty {
+  text-align: center;
+  color: var(--ink-dim);
+  margin: 40px 0;
+}
+
 /* ---- Game grid (hub) -------------------------------------------------- */
 .grid {
   display: grid;
@@ -154,6 +200,20 @@ a:hover { color: var(--ink); }
   opacity: 0.6;
   pointer-events: none;
 }
+.card .play-pill {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--neon);
+  border: 1px solid var(--border);
+  background: rgba(76, 201, 240, 0.08);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.card:hover .play-pill { color: var(--ink); background: rgba(76, 201, 240, 0.18); }
 .card:nth-child(3n+2) .glow { background: radial-gradient(closest-side, rgba(177, 92, 255, 0.25), transparent); }
 .card:nth-child(3n)   .glow { background: radial-gradient(closest-side, rgba(255, 92, 138, 0.25), transparent); }
 
@@ -203,6 +263,12 @@ a:hover { color: var(--ink); }
   touch-action: none;
 }
 canvas { display: block; }
+.stage > canvas {
+  max-width: 100%;
+  height: auto;
+  touch-action: none;
+  background: var(--bg-soft);
+}
 
 .overlay {
   position: absolute;

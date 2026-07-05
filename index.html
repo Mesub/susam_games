@@ -2,63 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Forest Run 3D — Susam's Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Susam's Games — a global arcade</title>
+  <meta name="description" content="A global arcade of browser games — all built from scratch, all playable offline. Runners, puzzles, arcade classics and more." />
   <link rel="stylesheet" href="css/theme.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B2%3C/text%3E%3C/svg%3E" />
-  <!-- Load three.js locally (vendored) so the game runs fully offline. -->
-  <script type="importmap">
-  { "imports": { "three": "./js/vendor/three.module.js" } }
-  </script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B9%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
   <div class="wrap">
     <div class="brand">
-      <div class="logo">🌲</div>
-      <h1>Forest Run 3D</h1>
+      <div class="logo">🕹️</div>
+      <h1>Susam's Games</h1>
     </div>
-    <p class="tagline">Sprint down the forest trail. Dodge the trees. Leap the logs.</p>
+    <p class="tagline">A global arcade — lots of games, one place. Every game is built from scratch and plays right here in your browser, fully offline.</p>
 
-    <div class="game-shell">
-      <div class="game-head">
-        <h2>Run</h2>
-        <div class="scoreboard">
-          <div class="stat">
-            <div class="label">Score</div>
-            <div class="value" id="score">0</div>
-          </div>
-          <div class="stat">
-            <div class="label">Best</div>
-            <div class="value" id="best">0</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="stage" id="stage">
-        <!-- three.js renders its canvas into here -->
-        <div class="overlay" id="overlay">
-          <h3 id="ov-title">Forest Run 3D</h3>
-          <p id="ov-text">Switch lanes to weave between the trees and jump the fallen logs. The trail only gets faster.</p>
-          <button class="btn primary" id="start-btn">▶ Start Running</button>
-        </div>
-      </div>
-
-      <p class="controls-hint">
-        <kbd>←</kbd> <kbd>→</kbd> / <kbd>A</kbd> <kbd>D</kbd> change lane &nbsp;·&nbsp;
-        <kbd>Space</kbd> / <kbd>↑</kbd> jump &nbsp;·&nbsp; swipe on mobile
-      </p>
-
-      <div class="dpad" id="dpad" aria-hidden="true">
-        <button class="up" data-act="jump">⤒</button>
-        <button class="left" data-act="left">◀</button>
-        <button class="down" data-act="jump">⤓</button>
-        <button class="right" data-act="right">▶</button>
+    <div class="hub-toolbar">
+      <input type="search" id="search" class="search" placeholder="🔎 Search games…" aria-label="Search games" autocomplete="off" />
+      <div class="filters" id="filters">
+        <button class="chip active" data-cat="all">All</button>
+        <button class="chip" data-cat="arcade">Arcade</button>
+        <button class="chip" data-cat="puzzle">Puzzle</button>
+        <button class="chip" data-cat="classic">Classic</button>
       </div>
     </div>
 
-    <footer class="site">🌲 Susam's Games · Forest Run 3D · built with three.js</footer>
+    <div class="grid" id="grid"><!-- game cards injected by js/hub.js --></div>
+
+    <p class="empty" id="empty" hidden>No games match your search. Try another word.</p>
+
+    <footer class="site">🕹️ Susam's Games · <span id="count">0</span> games and counting · built from scratch, plays offline</footer>
   </div>
 
-  <script type="module" src="js/forest-run.js"></script>
+  <script type="module" src="js/hub.js"></script>
 </body>
 </html>

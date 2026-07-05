@@ -1,47 +1,54 @@
-# 🌲 Forest Run 3D
+# 🕹️ Susam's Games
 
-An endless runner built with [three.js](https://threejs.org/). Sprint down a
-forest trail, switch between three lanes to weave past the trees, and jump the
-fallen logs. The trail only gets faster.
-
-Everything you see — trees, logs, ground, and the runner — is generated from
-procedural geometry. There are no image or model assets, and three.js is
-vendored locally, so the game runs **completely offline**.
+A **global arcade** — a single hub with lots of browser games inside. Open the
+hub, pick a game, play. Every game is built from scratch with plain HTML, CSS
+and JavaScript (Forest Run 3D uses vendored three.js), there are **no external
+assets or build step**, and everything runs **completely offline**.
 
 ## Play
 
-Just open `index.html` in any modern browser. No build step, no server needed.
+Open `index.html` in any modern browser to reach the hub, then click a game.
 
 ```
 # or, if your browser blocks module scripts over file://
 python3 -m http.server 8000   # then visit http://localhost:8000
 ```
 
-## Controls
+## The games
 
-| Action        | Keyboard                          | Touch            |
-|---------------|-----------------------------------|------------------|
-| Change lane   | `←` `→` or `A` `D`                | swipe left/right |
-| Jump          | `Space` / `↑` / `W`               | tap or swipe up  |
+| Game | Genre | What it is |
+|------|-------|------------|
+| 🌲 **Forest Run 3D** | Arcade | A 3D endless runner (three.js) — weave past trees, jump logs. |
+| 🐍 **Snake** | Classic | Eat, grow, don't bite your tail. |
+| 🧱 **Block Drop** | Puzzle | Tetris — rotate and stack tetrominoes, clear lines. |
+| 🎯 **Brick Breaker** | Arcade | Breakout — bounce the ball, smash every brick. |
+| 🔢 **2048** | Puzzle | Slide and merge numbered tiles to reach 2048. |
+| 🃏 **Memory Match** | Puzzle | Flip cards and pair all eight from memory. |
+| 🐤 **Flap** | Arcade | One-button flyer — thread the pipes. |
+| 💣 **Minesweeper** | Classic | Clear a 9×9 field using the numbers. |
+| 🏓 **Pong** | Classic | You vs. a sharp CPU paddle, first to 7. |
+| ⭕ **Tic-Tac-Toe** | Classic | Three in a row against an unbeatable minimax AI. |
 
-On-screen buttons appear automatically on touch devices.
+The hub supports live search and category filters (Arcade / Puzzle / Classic).
 
-## How it works
+## Add a new game
 
-- **Endless trail** — ground tiles and roadside trees are pooled and recycled
-  as they scroll past the camera, so the forest is effectively infinite.
-- **Obstacles** — in-lane pine trees must be dodged by changing lanes; fallen
-  logs must be jumped. Spacing tightens and world speed ramps up with distance.
-- **Score** — one point per metre travelled; your best is saved to
-  `localStorage`.
+1. Drop a self-contained page in `games/<slug>.html` and its logic in
+   `js/<slug>.js` (reuse `css/theme.css` and the standard game-shell markup).
+2. Add one entry to the `GAMES` array in `js/hub.js` — it appears on the hub
+   with search and filtering automatically.
 
 ## Structure
 
 ```
-index.html            # page + HUD + import map
-css/theme.css         # shared neon/forest theme
-js/forest-run.js      # the game (three.js)
-js/vendor/            # vendored three.js module build
+index.html            # the hub (game grid + search + filters)
+css/theme.css         # shared neon/arcade theme
+js/hub.js             # hub catalog + rendering
+games/                # one standalone HTML page per game
+js/<game>.js          # one script per game
+js/vendor/            # vendored three.js (Forest Run 3D only)
 ```
+
+Scores and stats persist per game via `localStorage`.
 
 Part of **Susam's Games**.
