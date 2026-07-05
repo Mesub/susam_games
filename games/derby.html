@@ -14,16 +14,42 @@
     .combo .value { color: var(--gold); }
     .action-buttons {
       display: none;
-      margin-top: 4px;
+      flex-direction: column;
       gap: 10px;
     }
     .action-buttons button {
-      padding: 14px 30px;
-      font-size: 18px;
+      padding: 12px 22px;
+      font-size: 16px;
       border-radius: 16px;
     }
+    /* On touch devices the dpad + action buttons pin to the bottom of the
+       viewport as a fixed HUD. Without this they render in normal document
+       flow after the canvas, which on short phone screens sits below the
+       fold — the controls are there, but nothing is on-screen to tap. */
     @media (hover: none) and (pointer: coarse) {
       .action-buttons { display: flex; }
+      /* Keyboard-only reference and the branding footer both become dead
+         weight once the HUD is fixed to the bottom of the screen — neither
+         is essential on touch, and both would otherwise end up sitting
+         underneath the HUD no matter how scroll is positioned. */
+      .controls-hint { display: none; }
+      footer.site { display: none; }
+      .mobile-controls {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 30;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 12px;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+        background: linear-gradient(to top, rgba(11, 14, 26, 0.92), rgba(11, 14, 26, 0.65) 65%, transparent);
+      }
+      /* Reserve room below the stage so the fixed HUD never overlaps it,
+         at any scroll position. */
+      .game-shell { padding-bottom: 190px; }
     }
   </style>
 </head>
@@ -65,15 +91,17 @@
         <kbd>←</kbd><kbd>→</kbd>/<kbd>A</kbd><kbd>D</kbd> steer · <kbd>Space</kbd> boost · <kbd>F</kbd> shoot
       </p>
 
-      <div class="dpad" id="dpad">
-        <button class="up" id="d-up">▲</button>
-        <button class="left" id="d-left">◀</button>
-        <button class="down" id="d-down">▼</button>
-        <button class="right" id="d-right">▶</button>
-      </div>
-      <div class="action-buttons" id="action-buttons">
-        <button class="btn primary" id="boost-btn">💥 Boost</button>
-        <button class="btn primary" id="shoot-btn">🔫 Shoot</button>
+      <div class="mobile-controls">
+        <div class="dpad" id="dpad">
+          <button class="up" id="d-up">▲</button>
+          <button class="left" id="d-left">◀</button>
+          <button class="down" id="d-down">▼</button>
+          <button class="right" id="d-right">▶</button>
+        </div>
+        <div class="action-buttons" id="action-buttons">
+          <button class="btn primary" id="boost-btn">💥 Boost</button>
+          <button class="btn primary" id="shoot-btn">🔫 Shoot</button>
+        </div>
       </div>
     </div>
 
