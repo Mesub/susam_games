@@ -15,6 +15,14 @@ const GAMES = [
     tags: ["runner", "3d", "three.js", "endless"],
   },
   {
+    slug: "football",
+    title: "Penalty Shootout",
+    emoji: "⚽",
+    blurb: "Step up to the spot. Aim, pick your height, time the power, beat the keeper.",
+    cats: ["arcade"],
+    tags: ["football", "soccer", "penalty", "sports"],
+  },
+  {
     slug: "snake",
     title: "Snake",
     emoji: "🐍",
